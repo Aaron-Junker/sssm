@@ -1,1 +1,1 @@
-# sssm
+# Super simple state machine for PHP

@@ -2,7 +2,7 @@
   "$schema": "https://getcomposer.org/schema.json",
   "name": "sssm/sssm",
   "description": "Super simple state machine",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "type": "libary",
   "homepage": "https://github.com/Aaron-Junker/sssm",
   "minimum-stability": "stable",

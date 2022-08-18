@@ -136,37 +136,8 @@ class stateNotAllowedException extends Exception {
      */
     public function __construct(state $fromState, state $toState)
     {
-        $fromStateName = $fromState::class;
-        $toStateName = $toState::class;
-        parent::__construct("State transition from $fromStateName to $toStateName is not allowed.");
+        parent::__construct("Not allowed state transition.");
     }
 }
 
 
-$state1 = new state(["state2"]);
-$state2 = new state(["state1"]);
-$state3 = new state(["state1"]);
-
-$stateMachine = new stateMachine($state1);
-
-$state1->onStateEnter[] = function(){
-    echo "State 1 entered\n";
-};
-
-$state2->onStateEnter[] = function(){
-    echo "State 2 entered\n";
-};
-
-$state1->onLoop[]= function(){
-    echo "State 1 looped\n";
-};
-
-$state1->loop();
-$state2->loop();
-
-try {
-    $stateMachine->switchState($state2);
-    $stateMachine->switchState($state3);
-} catch (stateNotAllowedException $e) {
-    echo $e->getMessage();
-}
