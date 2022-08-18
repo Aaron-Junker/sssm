@@ -1,0 +1,33 @@
+{
+  "$schema": "https://getcomposer.org/schema.json",
+  "name": "sssm/sssm",
+  "description": "Super simple state machine",
+  "version": "0.0.1",
+  "type": "libary",
+  "homepage": "https://github.com/Aaron-Junker/sssm",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Aaron Junker",
+      "email": "aaron.junker@outlook.com",
+      "role": "Main developer",
+      "homepage": "https://blog.aaron-junker.ch"
+    }
+  ],
+  "scripts": {
+    "post-install-cmd": [
+      "echo \"Thank you for choosing SSSM as your state machine.\"",
+      "echo \"Please consider sponsoring at Github if you like it: https://github.com/sponsors/Aaron-Junker/\""
+    ]
+  },
+  "funding": [
+    {
+      "type": "Github sponsors",
+      "url": "https://github.com/sponsors/Aaron-Junker/"
+    }
+  ],
+  "require": {
+    "php": ">=8.0.0"
+  }
+}
