@@ -10,6 +10,8 @@ Please open a new issue to report a bug or request a new feature.
 composer require sssm/sssm
 ```
 
+View package on [packagist](https://packagist.org/packages/sssm/sssm).
+
 ## Usage
 
 ### 1. Include SSSM
