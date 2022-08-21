@@ -17,14 +17,13 @@ final class stateMachine
     {
         $this->startState = $startState;
         $this->currentState = $this->startState;
-        $this->currentState->initState();
         foreach ($this->startState->onStateEnter as $callback) {
             $callback();
         }
     }
 
     /**
-     * @return state|null The current state.
+     * @return state The current state.
      */
 
     final public function getCurrentState(): state {
@@ -38,9 +37,8 @@ final class stateMachine
      */
     final public function switchState(state $newState):bool{
         if(!in_array($newState, $this->currentState->allowedStatesAfter)){
-            throw new stateNotAllowedException($this->currentState, $newState);
+            throw new stateNotAllowedException();
         }
-        $newState->initState();
         foreach ($this->currentState->onStateLeave as $callback) {
             $callback();
         }

@@ -6,35 +6,36 @@ use Exception;
 
 final class state
 {
-    public bool $stateInitialized = false;
     private bool $canLoop;
+
     /**
      * @param array $allowedStatesAfter The states that can be transitioned to from this state.
      * @param bool $canLoop Sets if looping the state is allowed
+     * @throws stateNotAllowedException
      */
     final public function __construct(array $allowedStatesAfter, bool $canLoop = true){
         $this->allowedStatesAfter = $allowedStatesAfter;
         $this->canLoop = $canLoop;
-    }
-
-    final public function initState(){
-        $newAllowedStatesAfter = [];
-        if(!$this->stateInitialized){
-            foreach ($this->allowedStatesAfter as $state) {
-                global $$state;
-                $newAllowedStatesAfter[] = $$state;
-            }
-            $this->allowedStatesAfter = $newAllowedStatesAfter;
-        }
-        $this->stateInitialized = true;
         if($this->canLoop){
             $this->allowedStatesAfter[] = $this;
+        }elseif(in_array($this, $this->allowedStatesAfter)){
+            throw new stateNotAllowedException();
         }
     }
 
     /**
-     * @return void Starts the state from the beginning
-     * @throws Exception
+     * This function adds a new state to the allowed states after this state.
+     * @param state $state
+     * @return void
+     */
+    final public function addNewAllowedStateTransition(state $state): void
+    {
+        $this->allowedStatesAfter[] = $state;
+    }
+
+    /**
+     * @return void Starts the state from the beginning.
+     * @throws loopNotAllowedException
      */
     final public function loop(): void {
         if($this->canLoop) {
@@ -45,7 +46,7 @@ final class state
                 $callback();
             }
         }else{
-            throw new Exception("Looping is not allowed in this state");
+            throw new loopNotAllowedException();
         }
     }
 
