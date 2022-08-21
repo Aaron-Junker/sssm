@@ -11,7 +11,6 @@ class loopNotAllowedException extends stateTransitionNotAllowedException
 {
     public function __construct(state $state)
     {
-        Exception::__construct("Looping is not allowed in state: \".$state->stateName.\".");
-        parent::__construct($state, $state);
+        parent::__construct($state, $state, "Looping is not allowed in state: \".$state->stateName.\".");
     }
 }

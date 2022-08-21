@@ -9,10 +9,10 @@ use Exception;
  */
 class stateTransitionNotAllowedException extends Exception
 {
-    public function __construct(state $oldState, state $newState)
+    public function __construct(state $oldState, state $newState, string $additionalInformation = "")
     {
         $oldStateName = $oldState->stateName;
         $newStateName = $newState->stateName;
-        parent::__construct("State transition from \"$oldStateName\" to \"$newStateName\" not allowed.");
+        parent::__construct("State transition from \"$oldStateName\" to \"$newStateName\" not allowed.\n".$additionalInformation);
     }
 }
