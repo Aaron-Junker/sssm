@@ -36,7 +36,7 @@ final class stateMachine
      * @throws stateNotAllowedException
      */
     final public function switchState(state $newState):bool{
-        if(!in_array($newState, $this->currentState->allowedStatesAfter)){
+        if(!in_array($newState, $this->currentState->allowedStatesAfter, true)){
             throw new stateNotAllowedException();
         }
         foreach ($this->currentState->onStateLeave as $callback) {
