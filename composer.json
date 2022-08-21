@@ -1,8 +1,8 @@
 {
   "$schema": "https://getcomposer.org/schema.json",
-  "name": "sssm/sssm",
+  "name": "aaronjunker/sssm",
   "description": "Super simple state machine",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "libary",
   "homepage": "https://github.com/Aaron-Junker/sssm",
   "minimum-stability": "stable",
@@ -23,5 +23,10 @@
   ],
   "require": {
     "php": ">=8.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "sssm\\": "/"
+    }
   }
 }
