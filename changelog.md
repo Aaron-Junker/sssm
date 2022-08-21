@@ -5,6 +5,7 @@
 * Changed syntax of state class from `state(["allowedState1", "allowedState2"])` to `state([$allowedState1, $allowedState2]`, which lets you provide the actual class instead of just a string.
 * Added new exception: `loopNotAllowedException`.
 * Changed exception string of `stateNotAllowedException`.
+* Added new function to state class: `addAllowedStateTransition()"
 * Removed some leftover debug functions.
 * Some little other changes here and there.
 

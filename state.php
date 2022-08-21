@@ -13,7 +13,7 @@ final class state
      * @param bool $canLoop Sets if looping the state is allowed
      * @throws stateNotAllowedException
      */
-    final public function __construct(array $allowedStatesAfter, bool $canLoop = true){
+    final public function __construct(array $allowedStatesAfter=[], bool $canLoop = true){
         $this->allowedStatesAfter = $allowedStatesAfter;
         $this->canLoop = $canLoop;
         if($this->canLoop){
@@ -27,9 +27,13 @@ final class state
      * This function adds a new state to the allowed states after this state.
      * @param state $state
      * @return void
+     * @throws loopNotAllowedException
      */
-    final public function addNewAllowedStateTransition(state $state): void
+    final public function addAllowedStateTransition(state $state): void
     {
+        if($state == $this->allowedStatesAfter && !$this->canLoop){
+            throw new loopNotAllowedException();
+        }
         $this->allowedStatesAfter[] = $state;
     }
 
