@@ -7,10 +7,10 @@ Please open a new issue to report a bug or request a new feature.
 ## Installation
 
 ```bash
-composer require sssm/sssm
+composer require aaronjunker/sssm
 ```
 
-View package on [packagist](https://packagist.org/packages/sssm/sssm).
+View package on [packagist](https://packagist.org/packages/aaronjunker/sssm).
 
 ## Usage
 
@@ -18,7 +18,7 @@ View package on [packagist](https://packagist.org/packages/sssm/sssm).
 
 ```php
 // 1. Include SSSM
-include_once "vendor\sssm\sssm\index.php";
+include_once "vendor/autoload.php";
 
 use sssm\state;
 use sssm\stateMachine;
@@ -27,14 +27,16 @@ use sssm\stateMachine;
 
 Syntax:
 ```php
-$stateName = new state(["stateName of allowed transition 1", "stateName of allowed transition 2", ...], canLoop);
+$stateName = new state($stateName, $canLoop);
 ```
+
+Both arguments are optional. But a name is highly recommended.
 
 Example:
 ```php
-// State 1 allows transition to state 2 (can loop(default))
-$state1 = new state(["state2"]);
-// State 2 allows transition to state 3 and state 1 (loop not allowed=
+// State 1 named "State 1" (can loop(default))
+$state1 = new state("State 1");
+// State 2 named "State 2" (loop not allowed)
 $state2 = new state(["state3","state1"], false);
 // State 3 allows no transition (can loop)
 $state3 = new state([]);

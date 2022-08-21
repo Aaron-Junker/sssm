@@ -6,22 +6,19 @@ use Exception;
 
 final class state
 {
-    private bool $canLoop;
-
     /**
-     * @param array $allowedStatesAfter The states that can be transitioned to from this state.
      * @param bool $canLoop Sets if looping the state is allowed
-     * @throws stateNotAllowedException
+     * @throws loopNotAllowedException
      */
-    final public function __construct(array $allowedStatesAfter=[], bool $canLoop = true){
-        $this->allowedStatesAfter = $allowedStatesAfter;
-        $this->canLoop = $canLoop;
+    public function __construct(public string $stateName = "Undefined state name", private bool $canLoop = true){
         if($this->canLoop){
             $this->allowedStatesAfter[] = $this;
         }elseif(in_array($this, $this->allowedStatesAfter)){
-            throw new stateNotAllowedException();
+            throw new loopNotAllowedException($this);
         }
     }
+
+    public array $allowedStatesAfter = [];
 
     /**
      * This function adds a new state to the allowed states after this state.
@@ -29,10 +26,10 @@ final class state
      * @return void
      * @throws loopNotAllowedException
      */
-    final public function addAllowedStateTransition(state $state): void
+    public function addAllowedStateTransition(state $state): void
     {
         if($state == $this->allowedStatesAfter && !$this->canLoop){
-            throw new loopNotAllowedException();
+            throw new loopNotAllowedException($this);
         }
         $this->allowedStatesAfter[] = $state;
     }
@@ -41,23 +38,19 @@ final class state
      * @return void Starts the state from the beginning.
      * @throws loopNotAllowedException
      */
-    final public function loop(): void {
+    public function loop(): void {
         if($this->canLoop) {
             foreach ($this->onLoop as $callback) {
-                $callback();
+                $callback($this);
             }
             foreach ($this->onStateEnter as $callback) {
-                $callback();
+                $callback($this);
             }
         }else{
-            throw new loopNotAllowedException();
+            throw new loopNotAllowedException($this);
         }
     }
 
-    /**
-     * @var array An array of allowed states after this state.
-     */
-    public array $allowedStatesAfter = [];
     /**
      * @var array An array of functions called when the state is entered.
      */

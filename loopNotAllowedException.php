@@ -7,10 +7,11 @@ use Exception;
 /**
  * Exception thrown when a state is not allowed to be looped.
  */
-class loopNotAllowedException extends Exception
+class loopNotAllowedException extends stateTransitionNotAllowedException
 {
-    public function __construct()
+    public function __construct(state $state)
     {
-        parent::__construct("Looping is not allowed in this state.");
+        Exception::__construct("Looping is not allowed in state: \".$state->stateName.\".");
+        parent::__construct($state, $state);
     }
 }

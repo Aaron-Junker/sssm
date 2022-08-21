@@ -4,47 +4,48 @@ namespace sssm;
 
 final class stateMachine
 {
-    /**
-     * @var ?state The current state.
-     */
-    private ?state $currentState = null;
-    /**
-     * @var ?state The state the state-machine starts on.
-     */
-    private ?state $startState = null;
-
-    final public function __construct(state $startState)
+    public function __construct(private ?state $startState, state ...$states)
     {
-        $this->startState = $startState;
+        $this->states = $states;
         $this->currentState = $this->startState;
         foreach ($this->startState->onStateEnter as $callback) {
-            $callback();
+            $callback($this->startState);
         }
     }
 
     /**
+     * @var ?state The current state.
+     */
+    private ?state $currentState = null;
+
+    private array $states = [];
+
+    /**
      * @return state The current state.
      */
-
-    final public function getCurrentState(): state {
+    public function getCurrentState(): state {
         return $this->currentState;
+    }
+
+    public function getCurrentStateName(): string {
+        return $this->currentState->stateName;
     }
 
     /**
      * @param state $newState State to switch to.
      * @return bool true if state changing succeeded.
-     * @throws stateNotAllowedException
+     * @throws stateTransitionNotAllowedException
      */
-    final public function switchState(state $newState):bool{
+    public function switchState(state $newState):bool{
         if(!in_array($newState, $this->currentState->allowedStatesAfter, true)){
-            throw new stateNotAllowedException();
+            throw new stateTransitionNotAllowedException($this->currentState, $newState);
         }
         foreach ($this->currentState->onStateLeave as $callback) {
-            $callback();
+            $callback($this->currentState);
         }
         $this->currentState = $newState;
         foreach ($this->currentState->onStateEnter as $callback) {
-            $callback();
+            $callback($this->currentState);
         }
         return true;
     }
