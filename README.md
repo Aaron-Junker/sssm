@@ -17,7 +17,6 @@ View package on [packagist](https://packagist.org/packages/aaronjunker/sssm).
 ### 1. Include SSSM
 
 ```php
-// 1. Include SSSM
 include_once "vendor/autoload.php";
 
 use sssm\State;
@@ -36,57 +35,59 @@ Example:
 ```php
 // State 1 named "State 1" (can loop(default))
 $state1 = new state("State 1");
-// State 2 named "State 2" (loop not allowed)
-$state2 = new state(["state3","state1"], false);
-// State 3 allows no transition (can loop)
-$state3 = new state([]);
+// State 2 named "State 2" (can loop)
+$state2 = new state("State 2");
+// State 3 named "State 3" (loop not allowed)
+$state3 = new state("State 3", false);
+
+// Allowed transitions from state 1 to state 2 
+$state1->addAllowedStateTransition($state2);
+// Allowed transitions from state 2 to state 3
+$state2->addAllowedStateTransition($state3);
+// State 3 is not allowed to transition to any other state
 ```
 
 ### 3. Create the state machine
 
 Syntax:
 ```php
-$stateMachine = new stateMachine($initialState);
+$stateMachine = new stateMachine($initialState, $otherState, ...);
 ```
 
 Example:
 ```php
-$stateMachine = new stateMachine($state1);
+$stateMachine = new stateMachine($state1, $state2, $state3);
 ```
 
 ### 4. Add state events (optional)
 
 Syntax:
 ```php
-$stateName->onStateEnter[] = function(){
+$stateName->onStateEnter[] = function(State $passedState) {
     // Things that get executed when entering the state
 };
 
-$stateName->onLoop[]= function(){
+$stateName->onLoop[] = function(State $passedState){
     // Things that get executed when the state gets looped
 };
 
-$stateName->onStateLeave[]= function(){
+$stateName->onStateLeave[] = function(State $passedState){
     // Things that get executed when leaving the state
 };
 ```
 
 Example:
 ```php
-$state1->onStateEnter[] = function(){
-    echo "State 1 entered\n";
+$state1->onStateEnter[] = $state1->onStateEnter[] = function($state){
+    echo $state->getStateName()." entered\n";
 };
 
-$state1->onLoop[]= function(){
-    echo "State 1 looped\n";
+$state1->onLoop[] = function(state $state){
+    echo $state->getStateName()." looped\n";
 };
 
-$state1->onStateLeave[]= function(){
-    echo "State 1 leaved\n";
-};
-
-$state2->onStateEnter[] = function(){
-    echo "State 2 entered\n";
+$state1->onStateLeave[] = function(state $state){
+    echo $state->getStateName()." leaved\n";
 };
 ```
 
@@ -94,19 +95,14 @@ $state2->onStateEnter[] = function(){
 
 Syntax:
 ```php
-$stateName->loop();
-```
-
-Example:
-```php
-$state1->loop();
+$stateMachine->loop();
 ```
 
 ### 6. Switch state
 
 Syntax:
 ```php
-$stateMachine->switchState($newStateName);
+$stateMachine->switchState($newState);
 ```
 
 Example:
@@ -133,39 +129,37 @@ echo $stateMachine->getCurrentState() === $state3?"State 3 is current state":"St
 ```php
 <?php
 
-include_once "vendor\sssm\sssm\index.php";
+include_once "vendor/autoload.php";
 
-use sssm\State;
-use sssm\StateMachine;
+use sssm\state;
+use sssm\stateMachine;
 
-$state1 = new State(["state2"]);
-$state2 = new State(["state3"]);
-$state3 = new State([]);
+$state1 = new state("State 1");
+$state2 = new state("State 2");
+$state3 = new state("State 3",false);
 
-$stateMachine = new StateMachine($state1);
+$state1->addAllowedStateTransition($state2);
+$state2->addAllowedStateTransition($state3);
 
-$state1->onStateEnter[] = function(){
-    echo "State 1 entered\n";
+$stateMachine = new stateMachine($state1, $state2, $state3);
+
+$state1->onStateEnter[] = $state2->onStateEnter[] = function($state){
+    echo $state->getStateName()." entered\n";
 };
 
-$state1->onLoop[]= function(){
-    echo "State 1 looped\n";
+$state1->onLoop[] = function(state $state){
+    echo $state->getStateName()." looped\n";
 };
 
-$state1->onStateLeave[]= function(){
-    echo "State 1 leaved\n";
-};
-
-$state2->onStateEnter[] = function(){
-    echo "State 2 entered\n";
+$state1->onStateLeave[] = function(state $state){
+    echo $state->getStateName()." leaved\n";
 };
 
 
-$state1->loop();
+$stateMachine->loop();
 
 $stateMachine->switchState($state2);
 $stateMachine->switchState($state3);
 
 echo $stateMachine->getCurrentState() === $state3?"State 3 is current state":"State 3 is not current state";
-
 ```
