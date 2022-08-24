@@ -20,8 +20,8 @@ View package on [packagist](https://packagist.org/packages/aaronjunker/sssm).
 // 1. Include SSSM
 include_once "vendor/autoload.php";
 
-use sssm\state;
-use sssm\stateMachine;
+use sssm\State;
+use sssm\StateMachine;
 ```
 ### 2. Create the states
 
@@ -135,14 +135,14 @@ echo $stateMachine->getCurrentState() === $state3?"State 3 is current state":"St
 
 include_once "vendor\sssm\sssm\index.php";
 
-use sssm\state;
-use sssm\stateMachine;
+use sssm\State;
+use sssm\StateMachine;
 
-$state1 = new state(["state2"]);
-$state2 = new state(["state3"]);
-$state3 = new state([]);
+$state1 = new State(["state2"]);
+$state2 = new State(["state3"]);
+$state3 = new State([]);
 
-$stateMachine = new stateMachine($state1);
+$stateMachine = new StateMachine($state1);
 
 $state1->onStateEnter[] = function(){
     echo "State 1 entered\n";
