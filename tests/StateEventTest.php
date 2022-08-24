@@ -17,9 +17,9 @@ class StateEventTest extends TestCase
 {
     function generateTestStates(): array
     {
-        $state1 = new State('state 1');
-        $state2 = new State('state 2');
-        $state3 = new State('state 3', false);
+        $state1 = new State('State 1');
+        $state2 = new State('State 2');
+        $state3 = new State('State 3', false);
         return array($state1, $state2, $state3);
     }
 
@@ -37,8 +37,8 @@ class StateEventTest extends TestCase
         list($state1, $state2, $state3) = $states;
         $stateMachine = $this->generateTestMachine($states);
 
-        $state1->onStateEnter[] = function() {
-            echo "State 1 entered";
+        $state1->onStateEnter[] = function(state $state) {
+            echo $state->getStateName()." entered";
         };
         $stateMachine->switchState($state1);
         $this->assertEquals($state1, $stateMachine->getCurrentState());
@@ -51,11 +51,25 @@ class StateEventTest extends TestCase
         list($state1, $state2, $state3) = $states;
         $stateMachine = $this->generateTestMachine($states);
 
-        $state1->onStateLeave[] = function() {
-            echo "State 1 leaved";
+        $state1->onStateLeave[] = function(state $state) {
+            echo $state->getStateName()." leaved";
         };
         $stateMachine->switchState($state1);
         $this->assertEquals($state1, $stateMachine->getCurrentState());
         $this->expectOutputString("State 1 leaved");
+    }
+
+    function testOnLoop()
+    {
+        $states = $this->generateTestStates();
+        list($state1, $state2, $state3) = $states;
+        $stateMachine = $this->generateTestMachine($states);
+
+        $state1->onLoop[] = function(state $state) {
+            echo $state->getStateName()." looped";
+        };
+        $stateMachine->switchState($state1);
+        $this->assertEquals($state1, $stateMachine->getCurrentState());
+        $this->expectOutputString("State 1 looped");
     }
 }
