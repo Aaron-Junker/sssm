@@ -77,13 +77,13 @@ final class StateMachine
     public function loop(): void {
         if($this->currentState->getCanLoop()) {
             foreach ($this->currentState->onStateLeave as $callback) {
-                $callback($this);
+                $callback($this->currentState);
             }
             foreach ($this->currentState->onLoop as $callback) {
-                $callback($this);
+                $callback($this->currentState);
             }
             foreach ($this->currentState->onStateEnter as $callback) {
-                $callback($this);
+                $callback($this->currentState);
             }
         }else{
             throw new LoopNotAllowedException($this->currentState);
